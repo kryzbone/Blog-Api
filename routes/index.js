@@ -1,5 +1,5 @@
 const router = require("express").Router()
-const { blogValidation, results, signupValidation  } = require("../utils/validattion")
+const { blogValidation, results, signupValidation, loginValidation  } = require("../utils/validattion")
 const { login, signup } = require("../controllers/userController")
 const { blogsGet, blogsPost, blogsEdit, blogsDelete, blogsGetOne } = require("../controllers/blogController")
 
@@ -13,7 +13,7 @@ router.get("/", (req, res) => {
 
 //user routes
 router.post("/signup", signupValidation(), results, signup)
-router.post("/login", login)
+router.post("/login", loginValidation(), results, login)
 
 
 //blog routes

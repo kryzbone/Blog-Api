@@ -1,6 +1,7 @@
 require("dotenv").config()
 const User = require("../models/user")
 const bcrypt = require("bcrypt")
+const { generateToken } = require("../utils/authentication")
 
 const saltRound = parseInt(process.env.SALT)
 
@@ -43,7 +44,7 @@ exports.signup = async (req, res, next) => {
             password: hashed,
         })
 
-
+        //save to db
         const doc = await newUser.save()
         res.status(201).json({
             message: "User Created",
@@ -56,7 +57,39 @@ exports.signup = async (req, res, next) => {
 }
 
 //user login
-exports.login = () => {}
+exports.login = async (req, res, next) => {
+    try {
+        //het user from db
+        const user = await User.findOne({$or: [{email: req.body.username}, {username: req.body.username}]})
+        //if no user
+        if(!user) {
+            return res.status(400).json({
+                error: {
+                    message: "Wrong Email/Username or Password"
+                }
+            })
+        }
+        //check password for match
+        const match = await bcrypt.compare(req.body.password, user.password)
+        if(!match) {
+            return res.status(400).json({
+                error: {
+                    message: "Wrong Email/Username or Password"
+                }
+            })
+        }
+        //generate token
+        const token = generateToken({id: user._id})
+        res.status(200).json({
+            message: "Login Success",
+            token
+        })
+
+    }catch(err) {
+        next(err)
+    }
+}
+
 
 
 //remove password
