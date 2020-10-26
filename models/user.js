@@ -27,13 +27,13 @@ const userSchema = new Schema({
     },
     author: {
         type: Boolean,
-        required: true,
+        default: false,
     }
 
 })
 
 
 
-module.exports = model(User, userSchema)
+module.exports = model("User", userSchema)
 
 

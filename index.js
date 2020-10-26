@@ -5,6 +5,7 @@ const server = require("http").createServer(app)
 const mongoose = require("mongoose");
 
 const port = process.env.PORT || 5000
+const blogRoute = require("./routes/index")
 
 //mongo db setup
 mongoose.connect(process.env.MONGO_URI, 
@@ -12,7 +13,7 @@ mongoose.connect(process.env.MONGO_URI,
     () => console.log("DB Connected")
 )
 
-const blogRoute = require("./routes/index")
+
 
 //cors function
 app.use((req, res, next) => {

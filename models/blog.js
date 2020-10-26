@@ -1,5 +1,5 @@
 const { Schema, model } = require("mongoose")
-const ObjectID = Schema.ObjectID
+const ObjectID = Schema.Types.ObjectID
 
 
 const blogSchema = new Schema({
@@ -23,7 +23,6 @@ const blogSchema = new Schema({
     },
     published: {
         type: Boolean,
-        required: true,
         default: false
     },
     iat: {
