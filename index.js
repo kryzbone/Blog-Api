@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 
 const port = process.env.PORT || 5000
 const blogRoute = require("./routes/index")
+const { generalAuth } = require("./utils/authentication")
 
 //mongo db setup
 mongoose.connect(process.env.MONGO_URI, 
@@ -29,6 +30,8 @@ app.use((req, res, next) => {
 
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
+app.use(generalAuth)
+
 
 app.use("/api", blogRoute)
 

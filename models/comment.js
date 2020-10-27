@@ -1,5 +1,5 @@
 const { Schema, model } = require("mongoose");
-const ObjectID = Schema.ObjectID;
+const ObjectID = Schema.Types.ObjectID;
 
 const commentSchema = new Schema({
     message: {

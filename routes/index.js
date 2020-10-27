@@ -13,15 +13,15 @@ router.get("/", generalAuth, (req, res) => {
 //user routes
 router.post("/signup", signupValidation(), results, signup)
 router.post("/login", loginValidation(), results, login)
-//check if username or email is taken
+//username or email is taken route
 router.post("/user/taken", takenValidation(), results, userTaken )
 
 
 //blog routes
 router.get("/blogs", blogsGet)
 router.get("/blogs/:id", blogsGetOne)
-router.post("/blogs", blogsPost)
-router.post("/blogs/:id/edit", blogsEdit)
+router.post("/blogs",blogValidation(), results, blogsPost)
+router.post("/blogs/:id/edit", blogValidation(), results, blogsEdit)
 router.post("/blogs/:id/delete", blogsDelete)
 
 
