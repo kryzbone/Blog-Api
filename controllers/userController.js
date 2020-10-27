@@ -9,7 +9,7 @@ const saltRound = parseInt(process.env.SALT)
 exports.signup = async (req, res, next) => {
     try {
         const exist = await User.find({$or: [{email:req.body.email}, {username: req.body.username}]})
-
+        console.log(exist)
         //if user exist
         if(exist.length > 1 ) {
             return res.status(400).json({ 
@@ -93,11 +93,33 @@ exports.login = async (req, res, next) => {
     }
 }
 
+//check if username or email is taken 
+exports.userTaken = async (req, res, next) => {
+    try {
+        const exist = await User.findOne({$or: [{email: req.body.username}, {username: req.body.username}]})
+        if(exist) {
+            return res.status(200).json({
+                taken: true
+            })
+        }else {
+            return res.status(200).json({
+                taken: false
+            })
+        }
+
+    }catch(err) {
+        next(err)
+    }
+}
+
 
 
 //remove password
-exports.sanitize = (obj) => {
+function sanitize(obj) {
     const newObj = Object.assign({}, obj._doc);
     delete newObj.password
     return newObj
 }
+
+
+exports.sanitize = sanitize 

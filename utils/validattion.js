@@ -1,5 +1,8 @@
 const {body, validationResult} = require("express-validator")
 
+
+
+//blog validation 
 exports.blogValidation = () => {
     return [
         body("title").isString().optional({checkFalsy: true}).trim().blacklist("<>"),
@@ -7,7 +10,7 @@ exports.blogValidation = () => {
     ]
 }
 
-
+//sign up validation
 exports.signupValidation = () => {
     return [
         body("fullname", "Enter fullname").notEmpty().bail().isString().trim().blacklist("<>"),
@@ -18,6 +21,7 @@ exports.signupValidation = () => {
     ]
 }
 
+//login validation
 exports.loginValidation = () => {
     return [
         body("username", "Enter Username/Email").notEmpty().bail().isString().trim().blacklist("<>"),
@@ -25,8 +29,11 @@ exports.loginValidation = () => {
     ]
 }
 
+//username/email available validation
+exports.takenValidation = () => body("username", "Enter Username/Email").notEmpty().bail().isString().trim().blacklist("<>"),
 
 
+//validation results
 exports.results = (req, res, next) => {
     //check for errors
     const errors = validationResult(req);
