@@ -1,13 +1,12 @@
 const router = require("express").Router()
 const { blogValidation, results, signupValidation, loginValidation  } = require("../utils/validattion")
+const { generalAuth, auhorAuth } = require("../utils/authentication")
 const { login, signup } = require("../controllers/userController")
 const { blogsGet, blogsPost, blogsEdit, blogsDelete, blogsGetOne } = require("../controllers/blogController")
 
 
 
-
-
-router.get("/", (req, res) => {
+router.get("/", generalAuth, (req, res) => {
     res.json({message: "welcome to the blog api"})
 })
 

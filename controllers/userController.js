@@ -61,6 +61,7 @@ exports.login = async (req, res, next) => {
     try {
         //het user from db
         const user = await User.findOne({$or: [{email: req.body.username}, {username: req.body.username}]})
+
         //if no user
         if(!user) {
             return res.status(400).json({
@@ -69,6 +70,7 @@ exports.login = async (req, res, next) => {
                 }
             })
         }
+
         //check password for match
         const match = await bcrypt.compare(req.body.password, user.password)
         if(!match) {
@@ -78,6 +80,7 @@ exports.login = async (req, res, next) => {
                 }
             })
         }
+        
         //generate token
         const token = generateToken({id: user._id})
         res.status(200).json({
@@ -93,7 +96,7 @@ exports.login = async (req, res, next) => {
 
 
 //remove password
-function sanitize(obj) {
+exports.sanitize = (obj) => {
     const newObj = Object.assign({}, obj._doc);
     delete newObj.password
     return newObj
