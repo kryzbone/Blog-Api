@@ -1,9 +1,8 @@
 const router = require("express").Router()
 const { blogValidation, results, signupValidation, loginValidation, takenValidation  } = require("../utils/validattion")
-const { generalAuth } = require("../utils/authentication")
+const { generalAuth, setAuthor } = require("../utils/authentication")
 const { login, signup, userTaken } = require("../controllers/userController")
 const { blogsGet, blogsPost, blogsEdit, blogsDelete, blogsGetOne } = require("../controllers/blogController")
-
 
 
 router.get("/", generalAuth, (req, res) => {
@@ -13,6 +12,8 @@ router.get("/", generalAuth, (req, res) => {
 //user routes
 router.post("/signup", signupValidation(), results, signup)
 router.post("/login", loginValidation(), results, login)
+router.post("/author/signup", signupValidation(), results, setAuthor, signup)
+router.post("/author/login", loginValidation(), results, setAuthor, login)
 //username or email is taken route
 router.post("/user/taken", takenValidation(), results, userTaken )
 

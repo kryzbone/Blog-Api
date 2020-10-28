@@ -7,9 +7,10 @@ const saltRound = parseInt(process.env.SALT)
 
 //user sign up
 exports.signup = async (req, res, next) => {
+    console.log(req.author)
     try {
         const exist = await User.find({$or: [{email:req.body.email}, {username: req.body.username}]})
-        console.log(exist)
+        
         //if user exist
         if(exist.length > 1 ) {
             return res.status(400).json({ 
@@ -41,6 +42,7 @@ exports.signup = async (req, res, next) => {
             fullname: req.body.fullname,
             username: req.body.username,
             email: req.body.email,
+            author: req.author || false,
             password: hashed,
         })
 
@@ -60,7 +62,7 @@ exports.signup = async (req, res, next) => {
 exports.login = async (req, res, next) => {
     try {
         //het user from db
-        const user = await User.findOne({$or: [{email: req.body.username}, {username: req.body.username}]})
+        let user = await User.findOne({$or: [{email: req.body.username}, {username: req.body.username}]})
 
         //if no user
         if(!user) {
@@ -69,6 +71,13 @@ exports.login = async (req, res, next) => {
                     message: "Wrong Email/Username or Password"
                 }
             })
+        }
+
+        //first time user is loging in as author
+        if(req.author && !user.author) {
+            user.author = true
+            user = await user.save()
+            console.log(user)
         }
 
         //check password for match
@@ -80,6 +89,7 @@ exports.login = async (req, res, next) => {
                 }
             })
         }
+
         
         //generate token
         const token = generateToken({id: user._id})
@@ -89,6 +99,7 @@ exports.login = async (req, res, next) => {
         })
 
     }catch(err) {
+        console.log(err)
         next(err)
     }
 }

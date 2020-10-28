@@ -1,7 +1,6 @@
 require("dotenv").config()
 const User = require("../models/user")
 const jwt = require("jsonwebtoken")
-const { sanitize } = require("../controllers/userController")
 
 const secret = process.env.SECRET
 
@@ -9,6 +8,8 @@ const secret = process.env.SECRET
 //general authentication
 exports.generalAuth = async (req, res, next) => {
     try {
+        const { sanitize } = require("../controllers/userController")
+
         if(!req.headers.authorization) return next()
 
         //extract token from req body 
@@ -33,11 +34,13 @@ exports.generalAuth = async (req, res, next) => {
     } 
 }
 
+exports.setAuthor = (req, res, next) => {
+    req.author = true
+    next()
+}
 
 //generate token
 exports.generateToken = (obj) => {
     return jwt.sign(obj, secret, {expiresIn: "1d"})
 }
-
-
 
