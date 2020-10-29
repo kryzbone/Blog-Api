@@ -1,5 +1,6 @@
 const Blog = require("../models/blog")
 const Comment = require("../models/comment")
+const { create403Error } = require("../utils/errors")
 
 
 //get all blogs
@@ -113,6 +114,9 @@ exports.blogsEdit = async (req, res, next) => {
             const id = req.params.id
             //get blog from db
             const blog = await Blog.findById(id)
+
+            //check if author is authorised to edit blog
+            if(blog.author !== req.user._id) return create403Error()
 
             //no blog
             if(!blog) {

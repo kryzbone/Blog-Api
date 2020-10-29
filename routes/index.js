@@ -1,12 +1,13 @@
 const router = require("express").Router()
-const { blogValidation, results, signupValidation, loginValidation, takenValidation  } = require("../utils/validattion")
+const { blogValidation, commentValidation, signupValidation, loginValidation, takenValidation, results  } = require("../utils/validattion")
 const { generalAuth, setAuthor } = require("../utils/authentication")
 const { login, signup, userTaken } = require("../controllers/userController")
 const { blogsGet, blogsPost, blogsEdit, blogsDelete, blogsGetOne } = require("../controllers/blogController")
+const { commentGetOne, commentPost, commentEdit, commentDelete } = require("../controllers/commentController")
 
 
 router.get("/", generalAuth, (req, res) => {
-    res.json({message: "welcome to the blog api"})
+    res.json({ message: "welcome to the blog api" })
 })
 
 //user routes
@@ -24,6 +25,13 @@ router.get("/blogs/:id", blogsGetOne)
 router.post("/blogs",blogValidation(), results, blogsPost)
 router.post("/blogs/:id/edit", blogValidation(), results, blogsEdit)
 router.post("/blogs/:id/delete", blogsDelete)
+
+
+//comment routes
+router.get("/comments/:id", commentGetOne)
+router.post("/comments", commentValidation(), results, commentPost )
+router.post("/comments/:id/edit", commentValidation(), results, commentEdit)
+router.post("/comments/:id/delete", commentDelete)
 
 
 

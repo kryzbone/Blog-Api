@@ -13,7 +13,7 @@ const blogSchema = new Schema({
         required: true,
         trim: true
     },
-    comment: [
+    comments: [
         {type: ObjectID, ref: "Comment"}
     ],
     author: {

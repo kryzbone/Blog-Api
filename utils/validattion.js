@@ -10,6 +10,15 @@ exports.blogValidation = () => {
     ]
 }
 
+//comment validation 
+exports.commentValidation = () => {
+    return [
+        body("message", "No comment provided").notEmpty().isString().trim().blacklist("<>"),
+        body("author","Enter author id").notEmpty().trim().blacklist("<>"),
+        body("blog", "Provide blog id").notEmpty().trim().blacklist("<>")
+    ]
+}
+
 //sign up validation
 exports.signupValidation = () => {
     return [

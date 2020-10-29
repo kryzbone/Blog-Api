@@ -7,7 +7,6 @@ const saltRound = parseInt(process.env.SALT)
 
 //user sign up
 exports.signup = async (req, res, next) => {
-    console.log(req.author)
     try {
         const exist = await User.find({$or: [{email:req.body.email}, {username: req.body.username}]})
         
@@ -77,7 +76,6 @@ exports.login = async (req, res, next) => {
         if(req.author && !user.author) {
             user.author = true
             user = await user.save()
-            console.log(user)
         }
 
         //check password for match
