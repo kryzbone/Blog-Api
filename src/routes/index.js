@@ -6,7 +6,7 @@ const { blogsGet, blogsPost, blogsEdit, blogsDelete, blogsGetOne } = require("..
 const { commentGetOne, commentPost, commentEdit, commentDelete } = require("../controllers/commentController")
 
 
-router.get("/", generalAuth, (req, res) => {
+router.get("/", (req, res) => {
     res.json({ message: "welcome to the blog api" })
 })
 
