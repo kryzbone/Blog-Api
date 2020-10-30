@@ -7,17 +7,21 @@ const { create403Error } = require("../utils/errors")
 exports.blogsGet = async (req, res, next) => {
     try {
         //on author's page display only author's blog
-        if(req.isAuthenticated && req.user.author) {
-            //get blogs from db
-            const blogs = await Blog.find({ author: req.user._id })
-            res.status(200).json({ data: blogs })
+        if(req.author) {
+            if(req.isAuthenticated && req.user.author) {
+                //get blogs from db
+                const blogs = await Blog.find({ author: req.user._id })
+                res.status(200).json({ data: blogs })
+            }else {
+                create403Error(res)
+            }
 
         }else {
             //get blogs from db
             const blogs = await Blog.find({ published: true })
             res.status(200).json({ data: blogs })
         }
-   
+
     }catch(err) {
         next(err)
     }
@@ -31,23 +35,26 @@ exports.blogsGetOne = async (req, res, next) => {
         const id = req.params.id
 
         //on authors page display only author's blog
-        if(req.isAuthenticated && req.user.author) {
-            //get blog from db
-            const blog = await Blog.findOne({ _id: id, author: req.user._id })
-
-            //if no blog
-            if(!blog) {
-                const err = new Error("Blog Not Found")
-                err.status = 404
-                return next(err)
-            }
-
-            //on success
-            res.status(200).json({ data: blog })
+        if(req.author) {
+            if(req.isAuthenticated && req.user.author) {
+                //get blog from db
+                const blog = await Blog.findOne({ _id: id, author: req.user._id })
     
+                //if no blog
+                if(!blog) {
+                    const err = new Error("Blog Not Found")
+                    err.status = 404
+                    return next(err)
+                }
+    
+                //on success
+                res.status(200).json({ data: blog })
+            }else {
+                create403Error(res)
+            }
+        
         }else {
             //get id & get blog from db
-            const id = req.params.id
             const blog = await Blog.findOne({ _id: id, published: true })
 
             //if no blog
@@ -116,7 +123,7 @@ exports.blogsEdit = async (req, res, next) => {
             const blog = await Blog.findById(id)
 
             //check if author is authorised to edit blog
-            if(blog.author !== req.user._id) return create403Error()
+            if(blog.author !== req.user._id) return create403Error(res)
 
             //no blog
             if(!blog) {

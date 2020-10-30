@@ -21,7 +21,9 @@ router.post("/user/taken", takenValidation(), results, userTaken )
 
 //blog routes
 router.get("/blogs", blogsGet)
+router.get("/author/blogs", setAuthor, blogsGet)
 router.get("/blogs/:id", blogsGetOne)
+router.get("/author/blogs/:id", setAuthor, blogsGetOne)
 router.post("/blogs",blogValidation(), results, blogsPost)
 router.post("/blogs/:id/edit", blogValidation(), results, blogsEdit)
 router.post("/blogs/:id/delete", blogsDelete)

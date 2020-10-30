@@ -37,9 +37,7 @@ exports.commentPost = async (req, res, next) => {
         if(req.isAuthenticated) {
             //prevent duplicate
             const isDuplicate = await Comment.findOne({author: req.user._id, message: req.body.message})
-            console.log(isDuplicate)
-            if(isDuplicate) return create400Error("Comment is already created")
-
+            if(isDuplicate) return create400Error(res, "Comment is already created")
             //create comment
             const newComment = Comment({
                 author: req.user._id,
@@ -61,7 +59,7 @@ exports.commentPost = async (req, res, next) => {
             })
 
         }else {
-            create403Error()
+            create403Error(res)
         }
     
     }catch(err) {
@@ -77,9 +75,8 @@ exports.commentEdit = async (req, res, next) => {
         if(req.isAuthenticated) {
             //get comment from db
             const comment = await Comment.findById(id)
-
             //check if user created the comment
-            if(comment.author !== req.user._id) return create403Error()
+            if(comment.author.toString() !== req.user._id.toString()) return create403Error(res)
 
             //edit comment and save
             comment.message = req.body.message
@@ -92,7 +89,7 @@ exports.commentEdit = async (req, res, next) => {
             })
 
         }else {
-            create403Error()
+            create403Error(res)
         }
 
     }catch(err) {
@@ -103,16 +100,20 @@ exports.commentEdit = async (req, res, next) => {
 
 exports.commentDelete = async (req, res, next) => {
     try {
-        const id = req.params.id
         if(req.isAuthenticated) {
-            const doc =  Comment.findOneAndDelete({_id: id, author: req.user._id})
-            console.log(doc)
-        
+            const id = req.params.id
+            const doc = await Comment.findOneAndDelete({_id: id, author: req.user._id})
+            if(!doc) return res.status(200).json({ message: "Comment Not Found"})
+
+            //delete comment from Blog
+            await Blog.updateOne({_id: doc.blog}, {$pull: {comments: id}})
+
+            //on success
+            res.status(200).json({ message: "Comment Deleted" })
 
         }else {
-            create403Error()
+            create403Error(res)
         }
-
     }catch(err) {
         next(err)
     }

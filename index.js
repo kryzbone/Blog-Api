@@ -5,8 +5,8 @@ const server = require("http").createServer(app)
 const mongoose = require("mongoose");
 
 const port = process.env.PORT || 5000
-const blogRoute = require("./routes/index")
-const { generalAuth } = require("./utils/authentication")
+const blogRoute = require("./src/routes/index")
+const { generalAuth } = require("./src/utils/authentication")
 
 //mongo db setup
 mongoose.connect(process.env.MONGO_URI, 

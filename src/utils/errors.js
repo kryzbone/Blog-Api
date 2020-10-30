@@ -1,5 +1,5 @@
 //403 status code errors
-function create403Error() {
+function create403Error(res) {
     res.status(403).json({
         error: {
             message: "Access Denied You don't have permission to perform this action"
@@ -8,7 +8,7 @@ function create403Error() {
 }
 
 //400 status code errors
-function create400Error(msg) {
+function create400Error(res, msg) {
     res.status(400).json({
         error: {
             message: msg
