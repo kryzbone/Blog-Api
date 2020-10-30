@@ -19,7 +19,7 @@ mongoose.connect(process.env.MONGO_URI,
 //cors function
 app.use((req, res, next) => {
     res.header("access-control-allow-origin", "*");
-    res.header("access-control-allow-headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("access-control-allow-headers", "Origin, X-Requested-With, Content-Type, cache-control, Accept");
     res.header("access-control-allow-method", "GET, POST, PUT, DELETE")
 
     if(req.method === "OPTIONS") {
