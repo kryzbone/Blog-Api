@@ -183,3 +183,39 @@ exports.blogsDelete = async (req, res, next) => {
         next(err)
     }
 }
+
+
+//Publish blog
+exports.blogsPublish = async (req, res, next) => {
+    try {
+        if(req.isAuthenticated && req.user.author) {
+            const id = req.params.id
+            const blog = await Blog.findById(id)
+
+            //Unpublish blog
+            if(blog.published) {
+                blog.published = false
+                await blog.save()
+
+                return res.status(200).json({ message: "Unpublished Blog"})
+            } 
+
+            //check if author created this blog
+            const match = blog.author.toString() === req.user._id.toString()
+            if(match) {
+                blog.published = true
+                await blog.save()
+
+                //on success
+                res.status(200).json({ message: "Blog Published successfully" })
+            }else {
+                create403Error(res)
+            }
+        }else {
+            create403Error(res)
+        }
+
+    }catch(err) {
+        next(err)
+    }
+}
